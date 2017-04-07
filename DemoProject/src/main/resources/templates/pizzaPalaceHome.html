@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Pizza Palace Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<Script>
+	$(document).ready(function() {
+		$("#show-all-btn").click(function() {
+			$("#resultsBlock").load("/showall");
+		});
+		$("#redeem-btn").click(function() {
+			$("#resultsBlock").load("/redeem");
+		});
+		$("#tweet-todays-special-btn").click(function() {
+			$("#resultsBlock").load("/tweet");
+		});
+	});
+</Script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">Home</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">Manage Offers<span
+						class="caret" /></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" id="show-all-btn">Show All</a></li>
+						<li role="separator" class="divider" />
+						<li><a href="#" id="redeem-offer-btn">Redeem Offer</a></li>
+					</ul></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">Tweezza Time<span class="caret" />
+				</a>
+					<ul class="dropdown-menu">
+						<li><a href="#" id="tweet-todays-special-btn">Tweet Today's Special</a></li>
+					</ul></li>
+			</ul>
+		</div>
+		<div id="owner-info">
+			<h1 class="text-center">
+				<b>Pizza Palace <abbr title="San Diego">SD</abbr>
+				</b>
+			</h1>
+			<p class="text-muted text-right">
+				<small>A product of <mark>CraftProjectTeam</mark> (Designed
+					for use by PizzaPalace SD)
+				</small>
+			</p>
+			<blockquote class="text-info">
+				Located in San Diego, Pizza Palace has been serving food to
+				Americans and tourists in Southern California. We serve country and
+				skillet breakfasts, pizzas, pastas, and also have a children’s menu
+				catered particularly to kids under 12 years old.
+				<footer>From PPSD management</footer>
+			</blockquote>
+		</div>
+		<div id="resultsBlock" class="embed-responsive embed-responsive-16by9">
+		</div>
+	</div>
+</body>
+</html>

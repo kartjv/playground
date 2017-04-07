@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>PizzaPalace SD Offers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+</head>
+<body>
+	<div th:fragment="showall-offers" class="container-fluid">
+		<h2>Showing all offers</h2>
+		<table id="offer-table" class="table table-hover table-responsive">
+			<tr>
+				<td>OfferCode</td>
+				<td>IssuedFor</td>
+				<td>IssuedDate</td>
+			</tr>
+			<tr th:each="offer : ${offers}">
+				<td th:text="${offer.offercode}">NA</td>
+				<td th:text="${offer.issuedfor}">None</td>
+				<td th:text="${#dates.format(offer.issueddate, 'MM-dd-yyyy')}">01-01-2999</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
