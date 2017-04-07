@@ -1,63 +1,56 @@
 package com.project.demo.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.project.demo.data.Offer;
 import com.project.demo.data.OfferRepository;
 
-@Controller
+@RestController
 public class OfferController {
 
 	@Autowired
 	private OfferRepository offerRepository;
-	
+
 	@RequestMapping("/")
-	public String home(Model model) {
-		return "pizzaPalaceHome";
+	public ModelAndView home(ModelAndView mav) {
+		mav.setViewName("pizzaPalaceHome");
+		return mav;
 	}
-	
-	@RequestMapping("/greeting")
-	public String greeting(Model model) {
-		model.addAttribute("name", "Karthika");
-		return"greeting";
-	}
-	
+
 	@RequestMapping("/showall")
-	public String showAll(Model model) {
-		model.addAttribute("offers", offerRepository.getAllAvailableOffers());
-		return "showall :: showall-offers";
+	public ModelAndView showAll(ModelAndView mav) {
+		mav.setViewName("showall :: showall-offers");
+		mav.addObject("offers", offerRepository.getAllAvailableOffers());
+		return mav;
 	}
-	
-	@RequestMapping("/show/{offercode}")
-	public Offer getOffer(@RequestParam String offercode) {
-		return offerRepository.getOfferByOffercode(offercode);
-	}
-	
-	@RequestMapping("/add/{offercode}/{issuedfor}/{offerdesc}")
-	public String addOffer(@RequestParam String offercode, @RequestParam String issuedfor, @RequestParam String offerdesc) {
-		Offer offer = new Offer(offercode, issuedfor, new Date(), false, offerdesc);
+
+	@RequestMapping("/add")
+	public Offer addOffer(@ModelAttribute Offer offer) {
+		offer.setIsredeemed(false);
 		offerRepository.save(offer);
-		return "Saved!";
+		return offer;
 	}
-	
-	@RequestMapping("/redeem")
-	public String redeemOffer(@RequestParam String offercode) {
+
+	@RequestMapping(value="/redeem/{offercode}", method=RequestMethod.PUT)
+	public ModelAndView redeemOffer(@RequestParam String offercode, ModelAndView mav) {
 		Offer offer = offerRepository.getOfferByOffercode(offercode);
-		if(offer.isIsredeemed()) {
-			return "Already redeemed!";
+		String msg = null;
+		if (offer.isIsredeemed()) {
+			msg = "Already Redeemed, Coupon not usable!";
 		} else {
 			offerRepository.setRedeemedByOffercode(offercode);
-			return "Redeemed!";
+			msg = "Redeemed Now!";
 		}
+		mav.setViewName("redeem :: redeem-offer");
+		mav.addObject("redemptionStatus", msg);
+		return mav;
 	}
 	
+
 }

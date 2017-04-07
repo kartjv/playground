@@ -1,5 +1,7 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
 <head>
 <title>Pizza Palace Application</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -25,45 +27,47 @@
 </Script>
 </head>
 <body>
+	<!-- Header -->
 	<div class="container-fluid">
-		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Home</a>
-		</div>
-		<div id="navbar" class="collapse navbar-collapse">
-			<ul class="nav navbar-nav">
-				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">Manage Offers<span
-						class="caret" /></a>
-					<ul class="dropdown-menu">
-						<li><a href="#" id="show-all-btn">Show All</a></li>
-						<li role="separator" class="divider" />
-						<li><a href="#" id="redeem-offer-btn">Redeem Offer</a></li>
-					</ul></li>
-				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">Tweezza Time<span class="caret" />
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="#" id="tweet-todays-special-btn">Tweet Today's Special</a></li>
-					</ul></li>
-			</ul>
-		</div>
+
 		<div id="owner-info">
-			<h1 class="text-center">
-				<b>Pizza Palace <abbr title="San Diego">SD</abbr>
-				</b>
-			</h1>
-			<p class="text-muted text-right">
-				<small>A product of <mark>CraftProjectTeam</mark> (Designed
-					for use by PizzaPalace SD)
-				</small>
+			<p class="text-center">
+				<img src="images/pp_logo.jpg" alt="Pizza Palace Logo" width="40%"
+					height="10%" />
 			</p>
-			<blockquote class="text-info">
-				Located in San Diego, Pizza Palace has been serving food to
-				Americans and tourists in Southern California. We serve country and
-				skillet breakfasts, pizzas, pastas, and also have a children’s menu
-				catered particularly to kids under 12 years old.
-				<footer>From PPSD management</footer>
-			</blockquote>
+			<p class="text-muted text-right">
+				<small>This website is designed for use by PizzaPalace SD
+					(Website developed by CraftProjectTeam) </small>
+			</p>
+		</div>
+		<div class="header">
+			<div id="menubar">
+				<nav class="navbar navbar-inverse">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<a class="navbar-brand" href="#" th:href="@{/}">Home</a>
+						</div>
+						<ul class="nav navbar-nav">
+							<li class="dropdown"><a class="dropdown-toggle"
+								data-toggle="dropdown" href="#">Manage Offers<span
+									class="caret" /></a>
+								<ul class="dropdown-menu">
+									<li><a href="#" id="show-all-btn">Show All</a></li>
+									<li role="separator" class="divider" />
+									<li><a href="#" id="redeem-offer-btn">Redeem Offer</a></li>
+								</ul></li>
+							<li class="dropdown"><a class="dropdown-toggle"
+								data-toggle="dropdown" href="#">Tweezza Time<span
+									class="caret" />
+							</a>
+								<ul class="dropdown-menu">
+									<li><a href="#" id="tweet-todays-special-btn">Tweet
+											Today's Special</a></li>
+								</ul></li>
+						</ul>
+					</div>
+				</nav>
+			</div>
 		</div>
 		<div id="resultsBlock" class="embed-responsive embed-responsive-16by9">
 		</div>

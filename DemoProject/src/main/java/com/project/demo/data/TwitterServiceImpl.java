@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.twitter.api.CursoredList;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
@@ -23,14 +24,18 @@ public class TwitterServiceImpl implements TwitterService {
 	}
 
 	@Override
-	public String rewardCustomer(String custId) {
+	public Offer rewardCustomer(String custId) {
 		String offercode = "PP" + UUID.randomUUID().toString().substring(0, 15);
-		String offerdesc = "buy one get one free";
-		String message = "ThankYou for tweeting us! Here is a one-time for " + offerdesc;
+		String offerdesc = "buy one get one free coupon";
+		Offer offer = new Offer();
+		offer.setOffercode(offercode);
+		offer.setOfferdesc(offerdesc);
+		offer.setIssuedfor(custId);
+		
+		String message = "Thank you for mentioning us! Here is a one-time " + offerdesc;
 		twitter.directMessageOperations().sendDirectMessage(custId, message + offercode);
-		String forwardUrl = "forward:/offers/add?offercode=" + offercode + "&issuedfor=" + custId + "&offerdesc="
-				+ offerdesc;
-		return forwardUrl;
+		
+		return offer;
 	}
 
 	@Override
@@ -39,8 +44,13 @@ public class TwitterServiceImpl implements TwitterService {
 	}
 
 	@Override
-	public List<Tweet> getMyTweets() {
-		return twitter.searchOperations().search("PizzaPalace", 10).getTweets();
+	public List<Tweet> getWhoMentionedMe() {
+		return twitter.timelineOperations().getMentions(150);
+	}
+	
+	@Override
+	public CursoredList<Long> getMyFollowers() {
+		return twitter.friendOperations().getFollowerIds();
 	}
 
 }

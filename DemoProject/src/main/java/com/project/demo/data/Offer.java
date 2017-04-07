@@ -78,4 +78,40 @@ public class Offer implements Serializable {
 	public String getOfferdesc() {
 		return offerdesc;
 	}
+
+	/**
+	 * @param offercode the offercode to set
+	 */
+	public void setOffercode(String offercode) {
+		this.offercode = offercode;
+	}
+
+	/**
+	 * @param issuedfor the issuedfor to set
+	 */
+	public void setIssuedfor(String issuedfor) {
+		this.issuedfor = issuedfor;
+	}
+
+	/**
+	 * @param issueddate the issueddate to set
+	 */
+	public void setIssueddate(Date issueddate) {
+		this.issueddate = issueddate;
+	}
+
+	/**
+	 * @param isredeemed the isredeemed to set
+	 */
+	public void setIsredeemed(boolean isredeemed) {
+		this.isredeemed = isredeemed;
+	}
+
+	/**
+	 * @param offerdesc the offerdesc to set
+	 */
+	public void setOfferdesc(String offerdesc) {
+		this.offerdesc = offerdesc;
+	}
+	
 }
