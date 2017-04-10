@@ -3,8 +3,6 @@ package com.project.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,37 +18,39 @@ public class OfferController {
 	@RequestMapping("/")
 	public ModelAndView home(ModelAndView mav) {
 		mav.setViewName("pizzaPalaceHome");
+		mav.addObject("offer", new Offer());
 		return mav;
 	}
 
 	@RequestMapping("/showall")
 	public ModelAndView showAll(ModelAndView mav) {
 		mav.setViewName("showall :: showall-offers");
-		mav.addObject("offers", offerRepository.getAllAvailableOffers());
+		mav.addObject("offers", offerRepository.findAll());
 		return mav;
 	}
 
 	@RequestMapping("/add")
-	public Offer addOffer(@ModelAttribute Offer offer) {
+	public void addOffer(@ModelAttribute Offer offer) {
 		offer.setIsredeemed(false);
 		offerRepository.save(offer);
-		return offer;
 	}
 
-	@RequestMapping(value="/redeem/{offercode}", method=RequestMethod.PUT)
-	public ModelAndView redeemOffer(@RequestParam String offercode, ModelAndView mav) {
-		Offer offer = offerRepository.getOfferByOffercode(offercode);
-		String msg = null;
-		if (offer.isIsredeemed()) {
-			msg = "Already Redeemed, Coupon not usable!";
-		} else {
-			offerRepository.setRedeemedByOffercode(offercode);
-			msg = "Redeemed Now!";
-		}
+	@RequestMapping(value = "/redeem")
+	public ModelAndView redeem(ModelAndView mav) {
+		mav.addObject("offer", new Offer());
 		mav.setViewName("redeem :: redeem-offer");
-		mav.addObject("redemptionStatus", msg);
 		return mav;
 	}
-	
+
+	@RequestMapping(value = "/redeemoffer")
+	public ModelAndView redeemOffer(@ModelAttribute Offer offer, ModelAndView mav) {
+		String code = offer.getOffercode();
+		offer = offerRepository.getOfferByOffercode(code);
+		String msg = (offer.isIsredeemed()) ? "Already redeemed, coupon not usable!"
+				: ((offerRepository.setRedeemedByOffercode(code) == 1) ? "Redeemed now!" : "Invalid coupon code!");
+		mav.addObject("redemptionStatus", msg);
+		mav.setViewName("pizzaPalaceHome");
+		return mav;
+	}
 
 }

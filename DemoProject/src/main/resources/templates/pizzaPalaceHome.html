@@ -17,7 +17,7 @@
 		$("#show-all-btn").click(function() {
 			$("#resultsBlock").load("/showall");
 		});
-		$("#redeem-btn").click(function() {
+		$("#redeem-offer-btn").click(function() {
 			$("#resultsBlock").load("/redeem");
 		});
 		$("#tweet-todays-special-btn").click(function() {
@@ -32,7 +32,7 @@
 
 		<div id="owner-info">
 			<p class="text-center">
-				<img src="images/pp_logo.jpg" alt="Pizza Palace Logo" width="40%"
+				<img src="images/pizzapalace_logo.jpg" alt="Pizza Palace Logo" width="40%"
 					height="10%" />
 			</p>
 			<p class="text-muted text-right">
@@ -68,6 +68,14 @@
 					</div>
 				</nav>
 			</div>
+		</div>
+		<div id="redeem-response">
+			<p role="separator" class="divider" />
+			<p id="offer-validation-response" th:text="${redemptionStatus}">Unable
+				to process coupon code. Please try after some time!</p>
+		</div>
+		<div id="tweet-response">
+			<p role="seperator" class="divider" th:text="${tweetStatus}">Could not update status on Twitter!</p>
 		</div>
 		<div id="resultsBlock" class="embed-responsive embed-responsive-16by9">
 		</div>

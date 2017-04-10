@@ -1,6 +1,6 @@
 package com.project.demo.controllers;
 
-import java.util.List;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,56 +9,49 @@ import org.springframework.social.DuplicateStatusException;
 import org.springframework.social.MissingAuthorizationException;
 import org.springframework.social.OperationNotPermittedException;
 import org.springframework.social.RateLimitExceededException;
-import org.springframework.social.twitter.api.CursoredList;
 import org.springframework.social.twitter.api.InvalidMessageRecipientException;
 import org.springframework.social.twitter.api.MessageTooLongException;
-import org.springframework.social.twitter.api.Tweet;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.project.demo.data.Offer;
 import com.project.demo.data.DailySpecial;
 import com.project.demo.data.TwitterService;
 
-@Controller
+@RestController
 public class TwitterController {
 
 	@Autowired
 	private TwitterService twitterService;
 
 	@RequestMapping(value = "/tweet")
-	public String getMyTweets(Model model) {
-		model.addAttribute("dailySpecial", new DailySpecial());
-		return "tweetform :: tweet-daily";
+	public ModelAndView getMyTweets(ModelAndView mav) {
+		mav.addObject("dailySpecial", new DailySpecial());
+		mav.setViewName("tweetform :: tweet-daily");
+		return mav;
 	}
 
 	@RequestMapping(value = "/tweetdaily")
-	public String postDailySpecial(@ModelAttribute DailySpecial dailySpecial) {
+	public ModelAndView postDailySpecial(@ModelAttribute DailySpecial dailySpecial, ModelAndView mav) {
 		twitterService.postDailySpecial(dailySpecial.getSpecialName() + " - " + dailySpecial.getBriefRecipe());
-		return "redirect:/";
+		mav.addObject("tweetStatus", "Updated status on Twitter. Visit http://www.twitter.com");
+		mav.setViewName("redirect:/");
+		return mav;
 	}
 
-	@RequestMapping(value = "/rewardcust")
-	public String rewardCustomer(@ModelAttribute String custId, Model model) {
-		Offer offer = twitterService.rewardCustomer(custId);
-		model.addAttribute("offer", offer);
-		return "add";
-	}
-
-	//@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 60000)
 	public void autoRespondInTwitter() {
-		List<Tweet> mymentions = twitterService.getWhoMentionedMe();
-		while (twitterService != null) {
-			if (mymentions.size() > 0) {
-				for (Tweet tw : mymentions) {
-					CursoredList<Long> followersList = twitterService.getMyFollowers();
-					if(followersList.contains(tw.getInReplyToUserId())) {
-						twitterService.rewardCustomer(tw.getInReplyToScreenName());
-					}
-				}
+		HashMap<String, Long> mymentions = twitterService.getWhoMentionedMe();
+		if (twitterService != null && mymentions.size() > 0) {
+			for (String screenName : mymentions.keySet()) {
+				twitterService.rewardCustomer(screenName, mymentions.get(screenName));
+			}
+			try {
+				Thread.sleep(60000);
+			} catch (InterruptedException e) {
+				System.out.println("InterruptedException occurred - " + e.getMessage());
 			}
 		}
 	}
@@ -92,7 +85,7 @@ public class TwitterController {
 	public void handleMessageTooLongException(MessageTooLongException mtle) {
 		System.out.println("Length of the status message exceeds Twitter's 140 character limit - " + mtle.getMessage());
 	}
-	
+
 	@ExceptionHandler(RateLimitExceededException.class)
 	public void handleRateLimitExceededException(RateLimitExceededException rlee) {
 		System.out.println("Rate limit exceeded - " + rlee.getMessage());
